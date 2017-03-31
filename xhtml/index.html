@@ -1,0 +1,97 @@
+<html>
+
+<head>
+    <meta charset="UTF-8" />
+    <title>Pre prova</title>
+</head>
+
+<body>
+    <form>
+        <input id="produto" type="text" required placeholder="Produto" />
+        <input id="valor" type="number" required placeholder="Valor" />
+        <input id="indice" type="hidden" value="" />
+        <input type="button" onclick="inserir()" value="+" />
+        <input type="button" onclick="salvar()" value="salvar" />
+    </form>
+    <table>
+        <tbody id="lista">
+
+        </tbody>
+    </table>
+    <div>Total:<input type="text" value="0" style="pointer-events: none;" id="valorM"></div>
+</body>
+<script>
+                                      var produtos = new Array(), indice = 0;
+                                      var nomes = new Array();
+                                      var valores = new Array()
+                                      function inserir() {
+                                          var produto = document.getElementById('produto').value;
+                                          var valor = Number(document.getElementById('valor').value);
+                                          var total = Number(document.getElementById('valorM').value);
+                                          produtos[indice] = '<td>Produto: ' + produto + ' Valor: ' + valor + '</td>';
+                                          nomes[indice] = produto;
+                                          valores[indice] = valor;
+                                          indice++;
+                                          total = total + valor;
+                                          document.getElementById('valorM').value = total;
+                                          limpar();
+                                          imprime_vetor();
+                                      }
+                                      function limpar() {
+                                          document.getElementById('produto').value = null;
+                                          document.getElementById('valor').value = null;
+                                          document.getElementById('indice').value = null;
+                                      }
+                                      function imprime_vetor() {
+                                          var info = '';
+                                          for (var i = 0; i < produtos.length; i++) {
+                                              info += '<tr id="linha' + i + '">';
+                                              info += this.produtos[i];
+                                              info += '<td><input type="button" onclick="remover(' + i + ')" style="margin-left:10px" value="-" />';
+                                              info += '<input type="button" onclick="alterar(' + i + ')" style="margin-left:10px" value="alt" /></td>';
+                                              info += '</tr>';
+                                          }
+                                          document.getElementById("lista").innerHTML = info;
+                                      }
+
+                                      function remover(item) {
+                                          document.getElementById("lista").deleteRow(item);
+                                          var total = Number(document.getElementById('valorM').value);
+                                          document.getElementById('valorM').value = (total - valores[item]);
+                                          //document.getElementById('linha' + item).parentNode.removeChild;
+                                          delete produtos[item];
+                                          delete valores[item];
+                                          delete nomes[item];
+                                          produtos.slice(item, 1);
+                                          valores.slice(item, 1);
+                                          nomes.slice(item, 1);
+                                          imprime_vetor();
+                                      }
+                                      function alterar(item) {
+                                          document.getElementById('produto').value = nomes[item];
+                                          document.getElementById('valor').value = valores[item];
+                                          document.getElementById('indice').value = item;
+                                      }
+                                      function salvar() {
+                                          var nome = document.getElementById('produto').value;
+                                          var valor = Number(document.getElementById('valor').value);
+                                          var posicao = document.getElementById('indice').value;
+                                          var total = Number(document.getElementById('valorM').value);
+                                          if (valor > valores[posicao]) {
+                                              total = (total - valores[posicao]) + valor;
+                                          } else if (valor < valores[posicao]) {
+                                              total = (total - valores[posicao]) - valor;
+                                          } else {
+                                              total = total;
+                                          }
+                                          valores[posicao] = valor;
+                                          nomes[posicao] = nome;
+                                          produtos[posicao] = '<td>Produto: ' + nome + ' Valor: ' + valor + '</td>';
+                                          document.getElementById('valorM').value = total;
+                                          limpar();
+                                          imprime_vetor();
+                                      }
+
+</script>
+
+</html>
